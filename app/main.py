@@ -1,9 +1,12 @@
 import uvicorn
 from fastapi import FastAPI
-from routers.update_stock import update_stock_router
-from routers.get_stock import get_stock_router
+from app.routers.get_stock import get_stock_router
+from app.routers.update_stock import update_stock_router
+from app.database import engine, Base
 
 app = FastAPI()
+
+Base.metadata.create_all(bind=engine)
 
 app.include_router(get_stock_router)
 app.include_router(update_stock_router)
