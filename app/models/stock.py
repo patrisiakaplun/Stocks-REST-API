@@ -1,16 +1,20 @@
-from database import Base
-from typing import Optional
+from app.database import Base
+from sqlalchemy import Column, Integer, String, Float, JSON
+
 
 class Stock(Base):
-    afterHours: float
-    close: float
-    from_: str 
-    high: float
-    low: float
-    open: float
-    preMarket: float
-    status: str
-    symbol: str
-    volume: int
-    performance: dict = {}
-    amount: Optional[int] = None
+    __tablename__ = "stocks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    afterHours = Column(Float)
+    close = Column(Float)
+    from_ = Column(String)
+    high = Column(Float)
+    low = Column(Float)
+    open = Column(Float)
+    preMarket = Column(Float)
+    status = Column(String)
+    symbol = Column(String, unique=True, index=True)
+    volume = Column(Integer)
+    performance = Column(JSON, default={})
+    amount = Column(Integer)
