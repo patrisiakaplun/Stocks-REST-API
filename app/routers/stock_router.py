@@ -16,7 +16,7 @@ async def read_stock(symbol: str, request: Request, db: Session = Depends(get_db
     start_time = time.time()
     db_stock = crud.get_stock_by_symbol(db, symbol=symbol)
     
-    if db_stock is None:
+    if db_stock is None or db_stock.from_ != (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d'):
         stock_data = fetch_stock_from_polygon(symbol)
         db_stock = crud.create_stock(db, stock_data)
 
@@ -26,16 +26,10 @@ async def read_stock(symbol: str, request: Request, db: Session = Depends(get_db
 
 
 @stocks_router.post("/{symbol}", response_model=dict)
-async def update_stock(symbol: str, amount: schemas.CreateOrder, request: Request, db: Session = Depends(get_db)):
+async def update_stock(symbol: str, amount: schemas.AmountUpdateBase, request: Request, db: Session = Depends(get_db)):
     start_time = time.time()
-    db_stock = crud.get_stock_by_symbol(db, symbol=symbol)
-    if db_stock is None:
-        response_status = 404
-        await log_event(db, request, response_status, time.time() - start_time)
-        raise HTTPException(status_code=response_status, detail="Stock not found")
-
-    updated_stock = crud.update_stock_amount(db, symbol=symbol, amount=amount.amount)
-    order = schemas.OrderBase(stock_symbol=symbol, amount=amount.amount, timestamp=datetime.utcnow().isoformat())
+    order = schemas.OrderBase(stock_symbol=symbol, amount=amount.amount)
+    crud.update_stock_amount(db, symbol=symbol, amount=order.amount)
     crud.create_order(db, order)
     response_status = 201
     await log_event(db, request, response_status, time.time() - start_time)
@@ -43,7 +37,6 @@ async def update_stock(symbol: str, amount: schemas.CreateOrder, request: Reques
 
 async def log_event(db: Session, request: Request, response_status: int, response_time: float):
     event = schemas.EventBase(
-        timestamp=datetime.now(timezone.utc).isoformat(),
         endpoint=str(request.url),
         method=request.method,
         status_code=response_status,
