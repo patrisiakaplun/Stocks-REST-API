@@ -46,3 +46,9 @@ class EventBase(BaseModel):
 class CreateEvent(EventBase):
     class Config:
         from_attributes = True
+
+class AmountUpdateBase(BaseModel):
+    amount: int
+
+    class Config:
+        from_attributes = True
