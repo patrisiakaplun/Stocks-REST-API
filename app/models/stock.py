@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, Float, JSON
 class Stock(Base):
     __tablename__ = "stocks"
 
-    id = Column(Integer, primary_key=True, index=True)
+    symbol = Column(String, primary_key=True, unique=True)
     afterHours = Column(Float)
     close = Column(Float)
     from_ = Column(String)
@@ -14,7 +14,6 @@ class Stock(Base):
     open = Column(Float)
     preMarket = Column(Float)
     status = Column(String)
-    symbol = Column(String, unique=True, index=True)
     volume = Column(Integer)
     performance = Column(JSON, default={})
     amount = Column(Integer)
