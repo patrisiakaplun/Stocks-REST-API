@@ -28,8 +28,9 @@ async def read_stock(symbol: str, request: Request, db: Session = Depends(get_db
 @stocks_router.post("/{symbol}", response_model=dict)
 async def update_stock(symbol: str, amount: schemas.AmountUpdateBase, request: Request, db: Session = Depends(get_db)):
     start_time = time.time()
+    crud.update_stock_amount(db, symbol=symbol, amount=amount.amount)
+
     order = schemas.OrderBase(stock_symbol=symbol, amount=amount.amount)
-    crud.update_stock_amount(db, symbol=symbol, amount=order.amount)
     crud.create_order(db, order)
     response_status = 201
     await log_event(db, request, response_status, time.time() - start_time)
@@ -46,7 +47,7 @@ async def log_event(db: Session, request: Request, response_status: int, respons
 
 def fetch_stock_from_polygon(symbol: str) -> schemas.StockBase:
     yesterday_date = (datetime.now(timezone.utc) - timedelta(days=1)).strftime('%Y-%m-%d')
-    #today_date = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+
     url = f"{POLYGON_BASE_URL}/{symbol}/{yesterday_date}?apiKey={POLYGON_API_KEY}"
     response = requests.get(url)
     if response.status_code != 200:
