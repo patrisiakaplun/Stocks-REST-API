@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from app.routers.stocks import stocks_router
+from app.routers.stock_router import stocks_router
 from app.database import engine, Base
 
 app = FastAPI()
