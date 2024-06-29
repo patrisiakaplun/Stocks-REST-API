@@ -10,3 +10,7 @@ class Event(Base):
     method = Column(String)
     status_code = Column(Integer)
     response_time = Column(Float)
+
+    def __repr__(self):
+        return (f"Event(id={self.id}, timestamp={self.timestamp}, endpoint='{self.endpoint}', "
+                f"method='{self.method}', status_code={self.status_code}, response_time={self.response_time})")
