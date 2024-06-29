@@ -6,9 +6,7 @@ import time
 import requests
 from app.database import get_db
 from app.schemas import StockBase, EventBase, OrderBase, AmountUpdateBase, CreateStock
-
-POLYGON_API_KEY = "bs1n5Vdqoi_NOvmCZ_85rrcvtFnYN3vm"
-POLYGON_BASE_URL = "https://api.polygon.io/v1/open-close"
+from app.routers import constants
 
 stocks_router = APIRouter(prefix='/stock', tags=['stock'])
 
@@ -49,7 +47,7 @@ async def log_event(db: Session, request: Request, response_status: int, respons
 def fetch_stock_from_polygon(symbol: str) -> StockBase:
     yesterday_date = (datetime.now(timezone.utc) - timedelta(days=1)).strftime('%Y-%m-%d')
 
-    url = f"{POLYGON_BASE_URL}/{symbol}/{yesterday_date}?apiKey={POLYGON_API_KEY}"
+    url = f"{constants.POLYGON_BASE_URL}/{symbol}/{yesterday_date}?apiKey={constants.POLYGON_API_KEY}"
     response = requests.get(url)
     if response.status_code != 200:
         raise HTTPException(status_code=response.status_code, detail="Failed to fetch stock data")
