@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 from typing import Dict
+from datetime import datetime
 
-class StockCreate(BaseModel):
+class StockBase(BaseModel):
+    symbol: str
     afterHours: float
     close: float
     from_: str
@@ -10,37 +12,37 @@ class StockCreate(BaseModel):
     open: float
     preMarket: float
     status: str
-    symbol: str
     volume: int
     performance: Dict = {}
     amount: int
 
-class Stock(StockCreate):
-    id: int
-
     class Config:
-        orm_mode = True
+        from_attributes = True
 
-class OrderCreate(BaseModel):
+class CreateStock(StockBase):
+    class Config:
+        from_attributes = True
+
+class OrderBase(BaseModel):
     stock_symbol: str
     amount: int
-    timestamp: str
-
-class Order(OrderCreate):
-    id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
-class EventCreate(BaseModel):
-    timestamp: str
+class CreateOrder(OrderBase):
+    class Config:
+        from_attributes = True
+
+class EventBase(BaseModel):
     endpoint: str
     method: str
     status_code: int
     response_time: float
 
-class Event(EventCreate):
-    id: int
-
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class CreateEvent(EventBase):
+    class Config:
+        from_attributes = True
