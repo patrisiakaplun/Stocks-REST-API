@@ -1,4 +1,3 @@
-# app/crud.py
 from sqlalchemy.orm import Session
 from app import schemas
 from app.models.stock import Stock
