@@ -1,18 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
-from app import crud, schemas
+from app import crud
 from datetime import datetime, timezone, timedelta
 import time
 import requests
 from app.database import get_db
+from app.schemas import StockBase, EventBase, OrderBase, AmountUpdateBase, CreateStock
 
 POLYGON_API_KEY = "bs1n5Vdqoi_NOvmCZ_85rrcvtFnYN3vm"
 POLYGON_BASE_URL = "https://api.polygon.io/v1/open-close"
 
 stocks_router = APIRouter(prefix='/stock', tags=['stock'])
 
-@stocks_router.get("/{symbol}", response_model=schemas.CreateStock)
-async def read_stock(symbol: str, request: Request, db: Session = Depends(get_db)):
+@stocks_router.get("/{symbol}", response_model=CreateStock)
+async def read_stock(symbol: str, request: Request, db: Session = Depends(get_db)) -> CreateStock:
     start_time = time.time()
     db_stock = crud.get_stock_by_symbol(db, symbol=symbol)
     
@@ -26,18 +27,18 @@ async def read_stock(symbol: str, request: Request, db: Session = Depends(get_db
 
 
 @stocks_router.post("/{symbol}", response_model=dict)
-async def update_stock(symbol: str, amount: schemas.AmountUpdateBase, request: Request, db: Session = Depends(get_db)):
+async def update_stock(symbol: str, amount: AmountUpdateBase, request: Request, db: Session = Depends(get_db)) -> dict:
     start_time = time.time()
     crud.update_stock_amount(db, symbol=symbol, amount=amount.amount)
 
-    order = schemas.OrderBase(stock_symbol=symbol, amount=amount.amount)
+    order = OrderBase(stock_symbol=symbol, amount=amount.amount)
     crud.create_order(db, order)
     response_status = 201
     await log_event(db, request, response_status, time.time() - start_time)
     return {"message": f"{amount.amount} units of stock {symbol} were added to your stock record"}
 
 async def log_event(db: Session, request: Request, response_status: int, response_time: float):
-    event = schemas.EventBase(
+    event = EventBase(
         endpoint=str(request.url),
         method=request.method,
         status_code=response_status,
@@ -45,7 +46,7 @@ async def log_event(db: Session, request: Request, response_status: int, respons
     )
     crud.create_event(db, event)
 
-def fetch_stock_from_polygon(symbol: str) -> schemas.StockBase:
+def fetch_stock_from_polygon(symbol: str) -> StockBase:
     yesterday_date = (datetime.now(timezone.utc) - timedelta(days=1)).strftime('%Y-%m-%d')
 
     url = f"{POLYGON_BASE_URL}/{symbol}/{yesterday_date}?apiKey={POLYGON_API_KEY}"
@@ -57,7 +58,7 @@ def fetch_stock_from_polygon(symbol: str) -> schemas.StockBase:
     if data["status"] != "OK":
         raise HTTPException(status_code=404, detail="Stock data not available")
 
-    return schemas.StockBase(
+    return StockBase(
         afterHours=data["afterHours"],
         close=data["close"],
         from_=data["from"],

@@ -18,7 +18,7 @@ class Stock(Base):
     performance = Column(JSON, default={})
     amount = Column(Integer)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (f"Stock( symbol='{self.symbol}', afterHours={self.afterHours}, close={self.close}, "
                 f"from_='{self.from_}', high={self.high}, low={self.low}, open={self.open}, preMarket={self.preMarket}, "
                 f"status='{self.status}', volume={self.volume}, performance='{self.performance}', amount={self.amount})")

@@ -9,6 +9,6 @@ class Order(Base):
     amount = Column(Float)
     timestamp = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (f"Order(id={self.id}, stock_symbol='{self.stock_symbol}', amount={self.amount}, "
                 f"timestamp={self.timestamp})")
