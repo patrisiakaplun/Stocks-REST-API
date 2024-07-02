@@ -24,21 +24,21 @@ This project is a FastAPI application that provides a REST API for managing stoc
 
 ### Using Docker Compose
 
-1. **Build and run the containers:**
+**Build and run the containers:**
 
     ```sh
     docker compose up --build
     ```
 
-2. **Access the API documentation:**
+## API
+
+**The API documentation can be found at:**
 
     Open your browser and navigate to `http://127.0.0.1:8000/docs`.
 
-## API
-
 ### Retrieve Stock Data
 - **GET /stock/{symbol}**
-    - Retrieves stock data for the given symbol from the database. If not found, fetches from Polygon.io and stores it in the database.
+    - Retrieves stock data for the given symbol. The data is fetched from Polygon.io and stored in a database.
     - **Response:** JSON object with stock data.
 
 ### Update Stock Amount
