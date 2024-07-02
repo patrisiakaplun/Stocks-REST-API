@@ -5,7 +5,7 @@ This project is a FastAPI application that provides a REST API for managing stoc
 ## Table of Contents
 - [Features](#features)
 - [Requirements](#requirements)
-- [Docker](#docker)
+- [Installing and Running the Application using Docker](#docker)
 - [Endpoints](#endpoints)
 - [License](#license)
 
@@ -20,35 +20,21 @@ This project is a FastAPI application that provides a REST API for managing stoc
 - PostgreSQL 14
 - Docker (optional, for containerized deployment)
 
-## Docker
+## Installing and Running the Application using Docker
 
 ### Using Docker Compose
 
 1. **Build and run the containers:**
 
     ```sh
-    docker-compose up --build
+    docker compose up --build
     ```
 
 2. **Access the API documentation:**
 
     Open your browser and navigate to `http://127.0.0.1:8000/docs`.
 
-### Running with Docker
-
-1. **Build the Docker image:**
-
-    ```sh
-    docker build -t my-fastapi-app .
-    ```
-
-2. **Run the Docker container:**
-
-    ```sh
-    docker run -d -p 8000:8000 my-fastapi-app
-    ```
-
-## Endpoints
+## API
 
 ### Retrieve Stock Data
 - **GET /stock/{symbol}**
