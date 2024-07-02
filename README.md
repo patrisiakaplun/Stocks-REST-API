@@ -33,7 +33,7 @@ This project is a FastAPI application that provides a REST API for managing stoc
 ## API
 
 ### The API documentation can be found at:
-    Open your browser and navigate to `http://127.0.0.1:8000/docs`.
+Open your browser and navigate to `http://127.0.0.1:8000/docs`.
 
 ### Retrieve Stock Data
 - **GET /stock/{symbol}**
