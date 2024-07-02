@@ -16,7 +16,7 @@ This project is a FastAPI application that provides a REST API for managing stoc
 - PostgreSQL database integration.
 
 ## Requirements
-- Python 3.11.5
+- Python 3.5 or above
 - PostgreSQL 14
 - Docker (optional, for containerized deployment)
 
