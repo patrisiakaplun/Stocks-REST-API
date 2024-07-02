@@ -6,7 +6,7 @@ This project is a FastAPI application that provides a REST API for managing stoc
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installing and Running the Application using Docker](#docker)
-- [Endpoints](#endpoints)
+- [API](#endpoints)
 - [License](#license)
 
 ## Features
