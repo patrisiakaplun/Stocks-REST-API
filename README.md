@@ -26,7 +26,7 @@ This project is a FastAPI application that provides a REST API for managing stoc
 
 **Build and run the containers:**
 
-    ```sh
+    ```
     docker compose up --build
     ```
 
